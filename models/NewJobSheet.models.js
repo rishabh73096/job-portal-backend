@@ -1,10 +1,7 @@
 import Mongoose from "mongoose";
 
 const Employeeschema = new Mongoose.Schema({
-  clientId: {
-    type: String,
-    unique: true
-  },
+  clientId: { type: String, required: true, unique: true },
   clientName: {
     type: String,
   },

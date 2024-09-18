@@ -1,5 +1,5 @@
 import upload from "../middleware/image.multer.middleware.js";
-import EmployeeSchema from "../models/NewJobSheet.models.js";  // Correct model name
+import EmployeeSchema from "../models/NewJobSheet.models.js"; // Correct model name
 
 // Function to handle the creation of a new job sheet
 export const NewJobSheet = async (req, res) => {
@@ -66,10 +66,9 @@ export const NewJobSheet = async (req, res) => {
   });
 };
 
-
 export const getAllJobSheets = async (req, res) => {
   try {
-    const jobSheets = await EmployeeSchema.find();  
+    const jobSheets = await EmployeeSchema.find();
     res.status(200).json(jobSheets);
   } catch (error) {
     console.error("Error fetching job sheets:", error);
@@ -77,26 +76,47 @@ export const getAllJobSheets = async (req, res) => {
   }
 };
 
-
 export const updateJobSheet = async (req, res) => {
-  const { clientId } = req.params;
-  const updatedData = req.body; 
+  const { clientId } = req.params; // Get clientId from request parameters
+  const updatedData = req.body; // Data to update from the request body
+
+  console.log(req.params); // Check if clientId is present
+  console.log(req.body); // Check the data being sent for the update
 
   try {
+    // Find the job sheet using clientId and update the record
     const jobSheet = await EmployeeSchema.findOneAndUpdate(
-      { clientId }, 
-      updatedData, 
-      { new: true, runValidators: true } 
+      { clientId }, // Find by clientId
+      updatedData, // Update with new data
+      { new: true, runValidators: true } // Options to return the updated document and run validators
     );
 
     if (!jobSheet) {
-      return res.status(404).json({ error: 'Job sheet not found' });
+      return res.status(404).json({ error: "Job sheet not found" });
     }
-    res.json(jobSheet);
+
+    res.json(jobSheet); // Return the updated job sheet
   } catch (error) {
-    console.error('Error updating job sheet:', error);
-    res.status(500).json({ error: 'Server error while updating the job sheet' });
+    console.error("Error updating job sheet:", error);
+    res
+      .status(500)
+      .json({ error: "Server error while updating the job sheet" });
   }
 };
 
+export const getProfileByClientId = async (req, res) => {
+  const { clientId } = req.query;  // Access clientId from query parameters
+  console.log("client id is", clientId);
+
+  try {
+    const profile = await EmployeeSchema.findOne({ clientId });
+    if (!profile) {
+      return res.status(404).json({ error: "Profile not found" });
+    }
+    res.status(200).json(profile);
+  } catch (error) {
+    console.error("Error fetching profile by clientId:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
 
