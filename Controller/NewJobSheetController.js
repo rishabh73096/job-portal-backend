@@ -66,13 +66,37 @@ export const NewJobSheet = async (req, res) => {
   });
 };
 
-// Function to retrieve all job sheets
+
 export const getAllJobSheets = async (req, res) => {
   try {
-    const jobSheets = await EmployeeSchema.find();  // Using EmployeeSchema to fetch data
+    const jobSheets = await EmployeeSchema.find();  
     res.status(200).json(jobSheets);
   } catch (error) {
     console.error("Error fetching job sheets:", error);
     res.status(500).json({ error: "Server error, unable to retrieve data" });
   }
 };
+
+
+export const updateJobSheet = async (req, res) => {
+  const { clientId } = req.params;
+  const updatedData = req.body; 
+
+  try {
+    const jobSheet = await EmployeeSchema.findOneAndUpdate(
+      { clientId }, 
+      updatedData, 
+      { new: true, runValidators: true } 
+    );
+
+    if (!jobSheet) {
+      return res.status(404).json({ error: 'Job sheet not found' });
+    }
+    res.json(jobSheet);
+  } catch (error) {
+    console.error('Error updating job sheet:', error);
+    res.status(500).json({ error: 'Server error while updating the job sheet' });
+  }
+};
+
+

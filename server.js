@@ -7,14 +7,8 @@ import NewJobSheetRoutes from "./Routes/NewJobSheetRoutes.js"
 const serverapp = express();
 dotenv.config(dotenv);
 serverapp.use(cors());
-
-// json converted in json formet
 serverapp.use(express.json());
-
-// urlencoded use remove search bar space in website
 serverapp.use(express.urlencoded());
-
-// import here serve static content
 serverapp.use(express.static("public"));
 
 serverapp.use("/NewJobSheet",NewJobSheetRoutes);
